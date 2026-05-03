@@ -6,6 +6,8 @@ use tower_http::cors::{Any, CorsLayer};
 use std::fs;
 use std::process::{Command, Stdio};
 use std::io::Write;
+use std::env;
+use std::net::SocketAddr;
 
 #[derive(Deserialize)]
 struct CodePayload {
@@ -370,11 +372,13 @@ impl GraphBuilder {
 async fn main() {
     let port_str = env::var("PORT").unwrap_or_else(|_| "3001".to_string());
     let port: u16 = port_str.parse().expect("PORT must be a number");
-
     let addr = SocketAddr::from(([0, 0, 0, 0], port));
-    
-    println!("Server starting on {}", addr);
 
+    println!("Listening on http://{}", addr);
+
+    let listener = tokio::net::TcpListener::bind(addr).await.unwrap();
+    
+    axum::serve(listener, app).await.unwrap(); 
 }
 
 async fn parse_c_code(Json(payload): Json<CodePayload>) -> Json<ParseResult> {
