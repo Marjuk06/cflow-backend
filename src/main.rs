@@ -370,12 +370,13 @@ impl GraphBuilder {
 // ─────────────────────────────────────────────
 #[tokio::main]
 async fn main() {
-    // 1. Setup the Router (The 'app' Railway is looking for)
+    // 1. Map the routes to the actual functions you have defined below
     let app = Router::new()
-        .route("/parse", post(handle_parse)) // Make sure 'handle_parse' is the name of your function
-        .layer(CorsLayer::permissive());     // Allows your frontend to talk to this backend
+        .route("/parse", post(parse_c_code))    // Changed from handle_parse to parse_c_code
+        .route("/execute", post(execute_c_code)) // Added the execute route for your terminal
+        .layer(CorsLayer::permissive());
 
-    // 2. Setup the Port and Address
+    // 2. Setup the Port and Address for Railway
     let port_str = env::var("PORT").unwrap_or_else(|_| "3001".to_string());
     let port: u16 = port_str.parse().expect("PORT must be a number");
     let addr = SocketAddr::from(([0, 0, 0, 0], port));
