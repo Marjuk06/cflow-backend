@@ -370,14 +370,20 @@ impl GraphBuilder {
 // ─────────────────────────────────────────────
 #[tokio::main]
 async fn main() {
+    // 1. Setup the Router (The 'app' Railway is looking for)
+    let app = Router::new()
+        .route("/parse", post(handle_parse)) // Make sure 'handle_parse' is the name of your function
+        .layer(CorsLayer::permissive());     // Allows your frontend to talk to this backend
+
+    // 2. Setup the Port and Address
     let port_str = env::var("PORT").unwrap_or_else(|_| "3001".to_string());
     let port: u16 = port_str.parse().expect("PORT must be a number");
     let addr = SocketAddr::from(([0, 0, 0, 0], port));
 
     println!("Listening on http://{}", addr);
 
+    // 3. Start the Server
     let listener = tokio::net::TcpListener::bind(addr).await.unwrap();
-    
     axum::serve(listener, app).await.unwrap(); 
 }
 
