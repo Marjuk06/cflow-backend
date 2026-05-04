@@ -433,7 +433,11 @@ async fn execute_c_code(Json(payload): Json<CodePayload>) -> Json<ExecuteResult>
         .duration_since(std::time::UNIX_EPOCH)
         .unwrap_or_default().subsec_nanos();
     let file_name = format!("temp_{}.c", uid);
-    let exe_name  = if cfg!(windows) { format!("temp_{}.exe", uid) } else { format!("./temp_{}", uid) };
+    let exe_name  = if cfg!(windows) 
+    { format!("temp_{}.exe", uid) 
+} else { 
+    format!("./temp_{}", uid) 
+};
 
     if let Err(e) = fs::write(&file_name, &payload.code) {
         return Json(ExecuteResult { output: "".into(), error: format!("Failed to write: {}", e) });
