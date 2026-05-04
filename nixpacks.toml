@@ -1,2 +1,4 @@
+providers = ["rust"]
+
 [phases.setup]
-nixPkgs = ["...", "gcc"]
+aptPkgs = ["...", "gcc", "libc6-dev"]
