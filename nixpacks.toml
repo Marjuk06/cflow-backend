@@ -1,7 +1,0 @@
-providers = ["rust"]
-
-[phases.setup]
-aptPkgs = ["...", "gcc", "libc6-dev"]
-
-
-
