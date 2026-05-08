@@ -1,0 +1,13 @@
+name: Render Keep Alive
+on:
+  schedule:
+    - cron: '*/10 * * * *' # This tells GitHub to run this every 10 minutes
+  workflow_dispatch:      # This allows you to run it manually to test
+
+jobs:
+  ping_server:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send Ping
+        # Replace the URL below with your actual Render URL
+        run: curl -I https://cflow-backend.onrender.com/
